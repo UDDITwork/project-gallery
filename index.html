@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uddit - Software Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.155.0/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.scrolled {
+            background-color: rgba(15, 15, 15, 0.9);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            box-shadow: 0 0 30px rgba(67, 97, 238, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            color: #d1d1d1;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--light);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .skills {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .tech-stack {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 2rem 0;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        .tech-stack::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tech-item {
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .tech-item i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .tech-item span {
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .experience {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: var(--gradient);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.5s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            transform: translateX(50px);
+        }
+
+        .timeline-item:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .timeline-content {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -13px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: 30px;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -12px;
+        }
+
+        .timeline-date {
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .projects {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            position: relative;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.2);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+
+        .project-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #d1d1d1;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .project-link {
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .project-link:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer {
+            background: rgba(15, 15, 15, 0.9);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .footer p {
+            margin-bottom: 1rem;
+            color: #d1d1d1;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .hero p {
+                margin: 0 auto 2rem auto;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+            }
+
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+
+            .timeline-item::after {
+                left: 18px;
+                right: auto;
+            }
+
+            .timeline-item:nth-child(even)::after {
+                left: 18px;
+            }
+
+            .projects-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .profile-img {
+                width: 250px;
+                height: 250px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .nav-links {
+                display: none;
+            }
+
+            .profile-img {
+                width: 200px;
+                height: 200px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .project-card {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <nav id="navbar">
+        <a href="#" class="logo">UDDIT</a>
+        <div class="nav-links">
+            <a href="#hero">Home</a>
+            <a href="#skills">Skills</a>
+            <a href="#experience">Experience</a>
+            <a href="#projects">Projects</a>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Uddit</h1>
+                <p>Software engineer with experience in full-stack development and AI/ML. Worked on scalable applications for 2 MIIC Incubator startups, contributed to LLMs' patent prosecution at INVENT IP and specializing in transformer models like OpenAI's GPT and Claude AI. Experienced in integrating AI/ML into software applications to create real world impact among users.</p>
+                <div class="social-links">
+                    <a href="https://github.com/UDDITwork" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/lorduddit-/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.youtube.com/@uddit748" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="mailto:2021umt1791@mnit.ac.in"><i class="far fa-envelope"></i></a>
+                    <a href="tel:7456886877"><i class="fas fa-phone-alt"></i></a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://media.licdn.com/dms/image/v2/D4E03AQGdr-Un9D3ltA/profile-displayphoto-shrink_800_800/B4EZVK5yHTH0Ac-/0/1740718418383?e=1747267200&v=beta&t=6UmqiBPmgt8Gna-nyGEHzjYmpD6qVCS7dvL4XmTk210" alt="Uddit Profile Photo" class="profile-img">
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Tech Stack</h2>
+            <div class="tech-stack" id="tech-stack">
+                <div class="tech-item">
+                    <i class="fab fa-html5"></i>
+                    <span>HTML5</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-css3-alt"></i>
+                    <span>CSS3</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-js"></i>
+                    <span>JavaScript</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-react"></i>
+                    <span>React.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-node-js"></i>
+                    <span>Node.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-python"></i>
+                    <span>Python</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-database"></i>
+                    <span>MongoDB</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-github"></i>
+                    <span>Git/GitHub</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-npm"></i>
+                    <span>npm</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-fire"></i>
+                    <span>Firebase</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-bootstrap"></i>
+                    <span>Bootstrap</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fab fa-sass"></i>
+                    <span>Tailwind</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Machine Learning</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-robot"></i>
+                    <span>AI</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-server"></i>
+                    <span>Express.js</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-database"></i>
+                    <span>SQL</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-code"></i>
+                    <span>C++</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-terminal"></i>
+                    <span>Flask</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience & Education</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">January 2025 - Current</div>
+                        <h3 class="timeline-title">Associate Patent Trainee, USPTO - InventIP Legal</h3>
+                        <p>Analyzed Transformer-based LLM architectures for patent applications. Developed an offline server-based implementation of the DeepSeek-R1 1.5B model for privacy in patent claim drafting.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">October - December 2024</div>
+                        <h3 class="timeline-title">Machine Learning Intern - Electroglobal Inc</h3>
+                        <p>Developed an AI-powered chatbot with React.js front-end and Flask back-end for IoT projects' progress tracking in real time. Integrated OpenAI API for NLP-based guidance and Firebase for user data storage.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022 - 2023</div>
+                        <h3 class="timeline-title">Application Developer - Zooner and The Vintage Foods</h3>
+                        <p>Developed websites and mobile apps for 2 MIIC-funded startups using React.js, Vite, Next.js, Node.js, MongoDB for websites and Flutter for apps.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">2021 - 2025</div>
+                        <h3 class="timeline-title">Malaviya National Institute of Technology Jaipur</h3>
+                        <p>Metallurgical and Materials Engineering with a CGPA of 7.1</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-container">
+                <div class="project-card">
+                    <img src="https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2024/09/a-laptop-with-chrome-open-a-pdf-and-download-icon-in-front-of-the-screen-and-the-chrome-logo-surrounding-it.jpg" alt="Multiple PDF Downloader" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Multiple PDF Downloader Chrome Extension</h3>
+                        <p class="project-description">A Chrome extension that allows users to download multiple PDFs at once, streamlining document collection and organization.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/Multi-PDF-Downloader-Chrome-Extension" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=HVi5IbzTu80" target="_blank" class="project-link">
+                                <i class="fab fa-youtube"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://clickup.com/blog/wp-content/uploads/2024/07/image-482.png" alt="Progress Tracker App" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Progress Tracker Application</h3>
+                        <p class="project-description">A comprehensive project management tool with real-time progress tracking and automated email alerts for deadlines and milestones.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/Mission-Project-Tracking-Application" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=dYU_G8NMo_I" target="_blank" class="project-link">
+                                <i class="fab fa-youtube"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://www.incapp.in/assets/what-you-learn/dsa-java.webp" alt="DSA Visualizer" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">DSA Visualizer Application</h3>
+                        <p class="project-description">An interactive visualization tool for understanding data structures and algorithms with real-time visualization of operations on various data structures.</p>
+                        <div class="project-links">
+                            <a href="https://udditwork.github.io/DSA_Visualizer/" target="_blank" class="project-link">
+                                <i class="fas fa-globe"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://www.phphr.com/wp-content/uploads/Attendance-management-software-system-1800x800.png" alt="Face Recognition" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Multiple Face Recognition Webapp</h3>
+                        <p class="project-description">An advanced face recognition system for student attendance management using OpenCV and Deep Learning for improved accuracy.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/TRIAL-PHASE-APPMNIT-MULTIPHASE-RECOGNITION" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://zupe.app/uddit_mnit_face_recognise_for_attendance" target="_blank" class="project-link">
+                                <i class="fas fa-globe"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://img.freepik.com/free-vector/ocr-concept-illustration_114360-7791.jpg" alt="Handwritten text extraction" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Handwritten Text Extraction Tool</h3>
+                        <p class="project-description">OCR tool that converts handwritten text from images to digital text using Tesseract OCR, OpenCV, and Deep Learning for multilingual character recognition.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/OCR" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://zupe.app/uddit_attendance-by-paper-list-image-upload-ocr" target="_blank" class="project-link">
+                                <i class="fas fa-globe"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1683002128603/5348051c-c405-4f25-b9b8-e33a0e645a32.png" alt="Resume Builder" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Resume Maker Application</h3>
+                        <p class="project-description">A Next.js application for resume creation with import, parsing, and PDF generation capabilities using React, Redux Toolkit, and LaTeX templates.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/Career-Resume-Builder" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://miro.medium.com/v2/resize:fit:1400/1*8HEOrWVQ6SJ1r6KhQNLBAg.jpeg" alt="AI Chatbot" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Next.js AI Chatbot</h3>
+                        <p class="project-description">A modern AI chatbot built with Next.js and Vercel's AI SDK for real-time, seamless conversation experiences.</p>
+                        <div class="project-links">
+                            <a href="https://nextjs-ai-chatbot-gules-five.vercel.app/" target="_blank" class="project-link">
+                                <i class="fas fa-globe"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2023/07/Screenshot-2023-07-18-114659.png" alt="Document Analyzer" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Shree AI Document Analyzer</h3>
+                        <p class="project-description">An intelligent document analysis tool that uses NLP and OCR to extract, analyze, and understand content from PDFs and DOCX files.</p>
+                        <div class="project-links">
+                            <a href="https://zupe.app/shreeai-document-analyzer" target="_blank" class="project-link">
+                                <i class="fas fa-globe"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://blog.logrocket.com/wp-content/uploads/2022/02/build-chatbot-openai-javascript.png" alt="Gemini Chatbot" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">AI Chatbot using Gemini API</h3>
+                        <p class="project-description">A sophisticated chatbot powered by Google's Gemini API with advanced natural language processing capabilities.</p>
+                        <div class="project-links">
+                            <a href="https://github.com/UDDITwork/Gemini-api-Chatbot" target="_blank" class="project-link">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://youtu.be/5DivR1euqY4" target="_blank" class="project-link">
+                                <i class="fab fa-youtube"></i> Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <img src="https://miro.medium.com/v2/resize:fit:1400/0*tBhUhRLVWJIW8l_B.png" alt="BuildBot" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">BuildBot</h3>
+                        <p class="project-description">A chatbot-driven tool that helps users find and assemble project components, streamlining the development process.</p>
+                        <div class="project-links">
+                            <a href="https://youtube.com/playlist?list=PLXFj8Opmn7IL3s3kogyD-diyV3rx5CbCr&si=q5j7iJ8eezNKEFyV" target="_blank" class="project-link">
+                                <i class="fab fa-youtube"></i> Playlist
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Uddit. All rights reserved.</p>
+            <div class="social-links" style="justify-content: center;">
+                <a href="https://github.com/UDDITwork" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/lorduddit-/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.youtube.com/@uddit748" target="_blank"><i class="fab fa-youtube"></i></a>
+                <a href="mailto:2021umt1791@mnit.ac.in"><i class="far fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Parallax background with Three.js
+        const createParallaxBackground = () => {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Create stars
+            const starsGeometry = new THREE.BufferGeometry();
+            const starsMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 1.5,
+                transparent: true
+            });
+            
+            const starsVertices = [];
+            for (let i = 0; i < 1000; i++) {
+                const x = (Math.random() - 0.5) * 2000;
+                const y = (Math.random() - 0.5) * 2000;
+                const z = (Math.random() - 0.5) * 2000;
+                starsVertices.push(x, y, z);
+            }
+            
+            starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+            const stars = new THREE.Points(starsGeometry, starsMaterial);
+            scene.add(stars);
+            
+            camera.position.z = 5;
+            
+            // Animation function
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                stars.rotation.x += 0.0005;
+                stars.rotation.y += 0.0005;
+                
+                renderer.render(scene, camera);
+            };
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            animate();
+        };
+        
+        // Wait for the DOM to load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize parallax background
+            createParallaxBackground();
+            
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+            
+            // Back to top button
+            const backToTopBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Auto-scroll tech stack
+            const techStack = document.getElementById('tech-stack');
+            let scrollAmount = 0;
+            let scrollDirection = 1;
+            
+            const autoScroll = () => {
+                scrollAmount += scrollDirection * 0.5;
+                
+                if (scrollAmount > techStack.scrollWidth - techStack.clientWidth) {
+                    scrollDirection = -1;
+                } else if (scrollAmount <= 0) {
+                    scrollDirection = 1;
+                }
+                
+                techStack.scrollLeft = scrollAmount;
+                requestAnimationFrame(autoScroll);
+            };
+            
+            autoScroll();
+            
+            // GSAP animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Timeline animation
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                gsap.to(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: 'top 80%',
+                        toggleClass: 'visible',
+                        once: true
+                    }
+                });
+            });
+            
+            // Project cards animation
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach((card, index) => {
+                gsap.to(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        toggleClass: 'visible',
+                        once: true
+                    },
+                    delay: index * 0.1
+                });
+            });
+            
+            // Hero section parallax
+            gsap.to('.hero-text', {
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: 100,
+                opacity: 0.5
+            });
+            
+            gsap.to('.hero-image', {
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: 150
+            });
+            
+            // Section title animations
+            gsap.utils.toArray('.section-title').forEach(title => {
+                gsap.from(title, {
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        once: true
+                    },
+                    opacity: 0,
+                    y: 50,
+                    duration: 1
+                });
+            });
+        });
+    </script>
+</body>
+</html>
